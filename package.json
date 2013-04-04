@@ -1,0 +1,36 @@
+{
+  "author": {
+    "name": "Soares Chen",
+    "email": "soares.chen@gmail.com",
+    "url": "http://soareschen.com"
+  },
+  "name": "quiver-router",
+  "desription": "Router stream handler that dispatch requests to different handlers based on supplied path",
+  "version": "0.0.1",
+  "homepage": "https://github.com/quiverjs/router",
+  "repository": {
+    "url": "git@github.com:quiverjs/router.git"
+  },
+  "dependencies": {
+    "quiver-error": ">=0.0.1"
+  },
+  "devDependencies": {
+    "quiver-stream-convert": ">=0.0.4",
+    "quiver-stream-channel": ">=0.0.7",
+    "async": ">=0.2.6",
+    "mocha": ">=1.8.1",
+    "should": ">=1.2.2"
+  },
+  "bugs": {
+    "url": "https://github.com/quiverjs/router/issues",
+    "email": "quiverjs@soareschen.com"
+  },
+  "licenses": {
+    "type": "MIT",
+    "url": "https://raw.github.com/quiverjs/license/master/LICENSE"
+  },
+  "main": "./lib/router",
+  "scripts": {
+    "test": "make test"
+  }
+}
