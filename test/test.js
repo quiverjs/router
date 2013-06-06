@@ -1,5 +1,5 @@
 
-"use strict"
+'use strict'
 
 var should = require('should')
 var router = require('../lib/router')
@@ -161,9 +161,9 @@ describe('route handler factory test', function() {
   it('basic factory test', function(callback) {
     var routeSpecs = [
       {
-        type: 'static',
+        routeType: 'static',
         path: '/foo',
-        handlerFactory: function(config, callback) {
+        handlerBuilder: function(config, callback) {
           var fooValue = config.fooConfig
           fooValue.should.equal('foo')
 
@@ -178,9 +178,9 @@ describe('route handler factory test', function() {
         }
       },
       {
-        type: 'static',
+        routeType: 'static',
         path: '/bar',
-        handlerFactory: function(config, callback) {
+        handlerBuilder: function(config, callback) {
           var barValue = config.barConfig
           barValue.should.equal('bar')
 
@@ -195,10 +195,10 @@ describe('route handler factory test', function() {
         }
       },
       {
-        type: 'regex',
+        routeType: 'regex',
         regex: /^\/hello(\/\w+)$/, 
         matchFields: ['path'],
-        handlerFactory: function(config, callback) {
+        handlerBuilder: function(config, callback) {
           var handler = function(args, streamable, callback) {
             args.path.should.equal('/world')
             callback(null, streamConvert.textToStreamable('hello world'))
@@ -208,8 +208,8 @@ describe('route handler factory test', function() {
         }
       },
       {
-        type: 'default',
-        handlerFactory: function(config, callback) {
+        routeType: 'default',
+        handlerBuilder: function(config, callback) {
           var handler = function(args, streamable, callback) {
             callback(null, streamConvert.textToStreamable('default handler'))
           }
@@ -219,12 +219,12 @@ describe('route handler factory test', function() {
       }
     ]
 
-    var routeHandlerFactory = router.createRouterHandlerFactory(routeSpecs)
+    var routeHandlerBuilder = router.createRouterHandlerBuilder(routeSpecs)
     var config = {
       fooConfig: 'foo',
       barConfig: 'bar'
     }
-    routeHandlerFactory(config, function(err, handler) {
+    routeHandlerBuilder(config, function(err, handler) {
       if(err) throw err
 
       async.parallelArray([
