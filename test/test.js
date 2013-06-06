@@ -195,8 +195,9 @@ describe('route handler factory test', function() {
         }
       },
       {
-        type: 'dynamic',
-        matcher: router.createRegexRouteMatcher(/^\/hello(\/\w+)$/, ['path']),
+        type: 'regex',
+        regex: /^\/hello(\/\w+)$/, 
+        matchFields: ['path'],
         handlerFactory: function(config, callback) {
           var handler = function(args, streamable, callback) {
             args.path.should.equal('/world')
