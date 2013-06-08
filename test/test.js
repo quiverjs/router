@@ -219,12 +219,12 @@ describe('route handler factory test', function() {
       }
     ]
 
-    var routeHandlerBuilder = router.createRouterHandlerBuilder(routeSpecs)
+    var routerHandlerBuilder = router.createRouterHandlerBuilder(routeSpecs)
     var config = {
       fooConfig: 'foo',
       barConfig: 'bar'
     }
-    routeHandlerBuilder(config, function(err, handler) {
+    routerHandlerBuilder(config, function(err, handler) {
       if(err) throw err
 
       async.parallelArray([
