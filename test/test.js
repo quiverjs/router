@@ -35,8 +35,8 @@ describe('router tests', function() {
       }
     }
 
-    var routeSpecs = { staticRoutes:  staticRoutes }
-    router.createRouterHandler(routeSpecs, function(err, routeHandler) {
+    var routeIndex = { staticRoutes:  staticRoutes }
+    router.createRouterHandler(routeIndex, function(err, routeHandler) {
       should.not.exist(err)
 
       async.parallelArray([
@@ -101,13 +101,13 @@ describe('router tests', function() {
       callback(null, streamConvert.textToStreamable('default handler'))
     }
 
-    var config = {
+    var routeIndex = {
       staticRoutes: staticRoutes,
       dynamicRoutes: dynamicRoutes,
       defaultRoute: defaultHandler
     }
 
-    router.createRouterHandler(config, function(err, routeHandler) {
+    router.createRouterHandler(routeIndex, function(err, routeHandler) {
       should.not.exist(err)
 
       async.parallelArray([
@@ -159,7 +159,7 @@ describe('router tests', function() {
 
 describe('route handler factory test', function() {
   it('basic factory test', function(callback) {
-    var routeSpecs = [
+    var routeList = [
       {
         routeType: 'static',
         path: '/foo',
@@ -219,7 +219,7 @@ describe('route handler factory test', function() {
       }
     ]
 
-    var routerHandlerBuilder = router.createRouterHandlerBuilder(routeSpecs)
+    var routerHandlerBuilder = router.createRouterHandlerBuilder(routeList)
     var config = {
       fooConfig: 'foo',
       barConfig: 'bar'
