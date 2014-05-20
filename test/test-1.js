@@ -112,18 +112,6 @@ var managedBarBuilder = routerLib.createRouteLoaderHandleableBuilder(
 
 var barMatcher = routerLib.createParamRouteMatcher(barPath)
 
-var testConfig = {
-  quiverHandleableBuilders: {
-    'foo get handler': fooGetHandleableBuilder,
-    'foo post handler': fooPostHandleableBuilder,
-    'bar handler': barHandleableBuilder
-  },
-  quiverMiddlewares: {
-    'route middleware': routeMiddleware
-  },
-  middlewareLoaded: true
-}
-
 var routeSpecs = [
   {
     routeType: 'static',
@@ -191,7 +179,21 @@ var routeListComponent = {
   middlewares: [
     'route middleware'
   ]
+}
 
+var testConfig = {
+  quiverHandleableBuilders: {
+    'foo get handler': fooGetHandleableBuilder,
+    'foo post handler': fooPostHandleableBuilder,
+    'bar handler': barHandleableBuilder
+  },
+  quiverMiddlewares: {
+    'route middleware': routeMiddleware
+  },
+  quiverRouteBuildSpecs: {
+    'test route list': routeBuildSpecs
+  },
+  middlewareLoaded: true
 }
 
 var testFooGetStream = function(streamHandler, callback) {
@@ -346,5 +348,16 @@ describe('router test 1', function() {
     config.middlewareLoaded = false
 
     testRouteBuildSpecs(routeBuildSpecs, config, callback)
+  })
+
+  it('router handleable test', function(callback) {
+    var handleableBuilder = routerLib.createRouterHandleableBuilderFromRouteListNames(
+      ['test route list'])
+
+    handleableBuilder(copyObject(testConfig), function(err, handleable) {
+      if(err) return callback(err)
+      
+      testRouterHandleable(handleable, callback)
+    })
   })
 })
