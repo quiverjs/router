@@ -73,6 +73,17 @@ var fooPostHandleableBuilder = function(config, callback) {
 var barHandleableBuilder = function(config, callback) {
   should.exists(config.quiverHandleables['foo post handler'])
 
+  if(config.testUrlBuilder) {
+    var urlBuilder = config.urlBuilder
+
+    should.exists(urlBuilder)
+    var res = urlBuilder({
+      name: 'foo'
+    })
+
+    should.equal(res.value, 'http://example.com/bar/foo')
+  }
+
   callback(null, barHandleable)
 }
 
@@ -181,6 +192,10 @@ var routeListComponent = {
   ]
 }
 
+var baseUrlBuilder = function(args) {
+  return { value: 'http://example.com/' }
+}
+
 var testConfig = {
   quiverHandleableBuilders: {
     'foo get handler': fooGetHandleableBuilder,
@@ -193,7 +208,8 @@ var testConfig = {
   quiverRouteBuildSpecs: {
     'test route list': routeBuildSpecs
   },
-  middlewareLoaded: true
+  middlewareLoaded: true,
+  urlBuilder: baseUrlBuilder
 }
 
 var testFooGetStream = function(streamHandler, callback) {
@@ -346,6 +362,7 @@ describe('router test 1', function() {
 
     var config = copyObject(testConfig)
     config.middlewareLoaded = false
+    config.testUrlBuilder = true
 
     testRouteBuildSpecs(routeBuildSpecs, config, callback)
   })
@@ -354,7 +371,11 @@ describe('router test 1', function() {
     var handleableBuilder = routerLib.createRouterHandleableBuilderFromRouteListNames(
       ['test route list'])
 
-    handleableBuilder(copyObject(testConfig), function(err, handleable) {
+    var config = copyObject(testConfig)
+    config.middlewareLoaded = false
+    config.testUrlBuilder = true
+    
+    handleableBuilder(config, function(err, handleable) {
       if(err) return callback(err)
       
       testRouterHandleable(handleable, callback)
