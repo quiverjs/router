@@ -52,6 +52,8 @@ var fooPostHandleable = {
   }
 }
 
+var fooHandleable = routerLib.createMethodRouterHandleable(fooMethodSpecs)
+
 var barHandleable = {
   toStreamHandler: function() {
     return barStreamHandler
@@ -82,6 +84,14 @@ var routeMiddleware = function(config, handlerBuilder, callback) {
   handlerBuilder(config, callback)
 }
 
+var fooPath = '/foo'
+var barPath = '/bar/:name'
+
+var fooUrlBuilder = routerLib.createStaticUrlBuilder(fooPath)
+var barUrlBuilder = routerLib.createParamUrlBuilder(barPath)
+
+var barMatcher = routerLib.createParameterizedRouteMatcher(barPath)
+
 var testConfig = {
   quiverHandleableBuilders: {
     'foo get handler': fooGetHandleableBuilder,
@@ -105,17 +115,15 @@ var fooMethodSpecs = [
   }
 ]
 
-var fooHandleable = routerLib.createMethodRouterHandleable(fooMethodSpecs)
-
 var routeSpecs = [
   {
     routeType: 'static',
-    path: '/foo',
+    path: fooPath,
     handleable: fooHandleable
   },
   {
     routeType: 'param',
-    path: '/bar/:name',
+    path: barPath,
     handleable: barHandleable
   }
 ]
@@ -123,7 +131,8 @@ var routeSpecs = [
 var routeBuildSpecs = [
   {
     routeType: 'static',
-    path: '/foo',
+    path: fooPath,
+    urlBuilder: fooUrlBuilder,
     handleableBuilders: [
       {
         handlerName: 'foo get handler',
@@ -138,9 +147,9 @@ var routeBuildSpecs = [
     ]
   },
   {
-    routeType: 'param',
+    routeType: 'dynamic',
+    matcher: barMatcher,
     handlerName: 'bar handler',
-    path: '/bar/:name',
     handleableBuilder: barHandleableBuilder
   }
 ]
@@ -151,7 +160,7 @@ var routeListComponent = {
   routeList: [
     {
       routeType: 'static',
-      path: '/foo',
+      path: fooPath,
       handlers: [
         {
           method: 'GET',
@@ -165,7 +174,7 @@ var routeListComponent = {
     },
     {
       routeType: 'param',
-      path: '/bar/:name',
+      path: barPath,
       handler: 'bar handler'
     }
   ],
