@@ -52,8 +52,6 @@ var fooPostHandleable = {
   }
 }
 
-var fooHandleable = routerLib.createMethodRouterHandleable(fooMethodSpecs)
-
 var barHandleable = {
   toStreamHandler: function() {
     return barStreamHandler
@@ -90,7 +88,29 @@ var barPath = '/bar/:name'
 var fooUrlBuilder = routerLib.createStaticUrlBuilder(fooPath)
 var barUrlBuilder = routerLib.createParamUrlBuilder(barPath)
 
-var barMatcher = routerLib.createParameterizedRouteMatcher(barPath)
+var fooMethodSpecs = [
+  {
+    method: 'GET',
+    handleable: fooGetHandleable
+  },
+  {
+    method: 'POST',
+    handleable: fooPostHandleable
+  }
+]
+
+var fooHandleable = routerLib.createMethodRouterHandleable(fooMethodSpecs)
+
+var managedFooGetBuilder = routerLib.createRouteLoaderHandleableBuilder(
+  'foo get handler', fooUrlBuilder, routeMiddleware)
+
+var managedFooPostBuilder = routerLib.createRouteLoaderHandleableBuilder(
+  'foo post handler', fooUrlBuilder, routeMiddleware)
+
+var managedBarBuilder = routerLib.createRouteLoaderHandleableBuilder(
+  'bar handler', barUrlBuilder, routeMiddleware)
+
+var barMatcher = routerLib.createParamRouteMatcher(barPath)
 
 var testConfig = {
   quiverHandleableBuilders: {
@@ -104,17 +124,6 @@ var testConfig = {
   middlewareLoaded: true
 }
 
-var fooMethodSpecs = [
-  {
-    method: 'GET',
-    handleable: fooGetHandleable
-  },
-  {
-    method: 'POST',
-    handleable: fooPostHandleable
-  }
-]
-
 var routeSpecs = [
   {
     routeType: 'static',
@@ -122,8 +131,8 @@ var routeSpecs = [
     handleable: fooHandleable
   },
   {
-    routeType: 'param',
-    path: barPath,
+    routeType: 'dynamic',
+    matcher: barMatcher,
     handleable: barHandleable
   }
 ]
@@ -132,17 +141,16 @@ var routeBuildSpecs = [
   {
     routeType: 'static',
     path: fooPath,
-    urlBuilder: fooUrlBuilder,
     handleableBuilders: [
       {
         handlerName: 'foo get handler',
         method: 'GET',
-        handleableBuilder: fooGetHandleableBuilder
+        handleableBuilder: managedFooGetBuilder
       },
       {
         handlerName: 'foo post handler',
         method: 'POST',
-        handleableBuilder: fooPostHandleableBuilder
+        handleableBuilder: managedFooPostBuilder
       }
     ]
   },
@@ -150,7 +158,7 @@ var routeBuildSpecs = [
     routeType: 'dynamic',
     matcher: barMatcher,
     handlerName: 'bar handler',
-    handleableBuilder: barHandleableBuilder
+    handleableBuilder: managedBarBuilder
   }
 ]
 
@@ -319,7 +327,7 @@ describe('router test 1', function() {
     testRouteBuildSpecs(routeBuildSpecs, copyObject(testConfig), callback)
   })
 
-  it.only('route list test', function(callback) {
+  it('route list test', function(callback) {
     var routeBuildSpecs = routerLib.routeListComponentToRouteBuildSpecs(routeListComponent)
 
     var config = copyObject(testConfig)
