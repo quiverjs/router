@@ -162,31 +162,32 @@ var routeBuildSpecs = [
   }
 ]
 
+var routeList = [
+  {
+    routeType: 'static',
+    path: fooPath,
+    handlers: [
+      {
+        method: 'GET',
+        handler: 'foo get handler'
+      },
+      {
+        method: 'POST',
+        handler: 'foo post handler'
+      }
+    ]
+  },
+  {
+    routeType: 'param',
+    path: barPath,
+    handler: 'bar handler'
+  }
+]
+
 var routeListComponent = {
   name: 'test route list',
   type: 'route list',
-  routeList: [
-    {
-      routeType: 'static',
-      path: fooPath,
-      handlers: [
-        {
-          method: 'GET',
-          handler: 'foo get handler'
-        },
-        {
-          method: 'POST',
-          handler: 'foo post handler'
-        }
-      ]
-    },
-    {
-      routeType: 'param',
-      path: barPath,
-      handler: 'bar handler'
-    }
-  ],
-  
+  routeList: routeList,
   middlewares: [
     'route middleware'
   ]
@@ -317,6 +318,17 @@ var testRouteBuildSpecs = function(routeBuildSpecs, config, callback) {
 }
 
 describe('router test 1', function() {
+  it('validate route specs', function() {
+    var err = routerLib.validateRouteSpecs(routeSpecs)
+    if(err) throw err
+
+    err = routerLib.validateRouteBuildSpecs(routeBuildSpecs)
+    if(err) throw err
+
+    err = routerLib.validateRouteList(routeList)
+    if(err) throw err
+  })
+
   it('route specs test', function(callback) {
     var routerHandleable = routerLib.createRouterHandleableFromRouteSpecs(routeSpecs)
 
