@@ -1,6 +1,7 @@
 'use strict'
 
 var util = require('util')
+var urlLib = require('url')
 var async = require('async')
 var should = require('should')
 var copyObject = require('quiver-copy').copyObject
@@ -88,7 +89,7 @@ var barHandleableBuilder = function(config, callback) {
 
   var res = urlBuilder({})
   should.equal(res.value, 'http://example.com/foo')
-  
+
   if(config.testUrlBuilder) {
     var urlBuilder = config.urlBuilder
 
@@ -209,7 +210,10 @@ var routeListComponent = {
 }
 
 var baseUrlBuilder = function(args) {
-  return { value: 'http://example.com/' }
+  var subpath = args.path || '/'
+  var path = urlLib.resolve('http://example.com/', subpath)
+
+  return { value: path }
 }
 
 var testConfig = {
