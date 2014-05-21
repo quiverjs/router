@@ -65,14 +65,30 @@ var fooGetHandleableBuilder = function(config, callback) {
 }
 
 var fooPostHandleableBuilder = function(config, callback) {
-  should.exists(config.quiverHandleables['foo get handler'])
+  var fooGetHandleable = config.quiverHandleables['foo get handler']
+  should.exists(fooGetHandleable)
+
+  var urlBuilder = fooGetHandleable.urlBuilder
+  should.exists(urlBuilder)
+
+  var res = urlBuilder({})
+  should.equal(res.value, 'http://example.com/foo')
 
   callback(null, fooPostHandleable)
 }
 
 var barHandleableBuilder = function(config, callback) {
-  should.exists(config.quiverHandleables['foo post handler'])
+  should.exists(config.quiverHandleables['foo get handler'])
 
+  var fooPostHandleable = config.quiverHandleables['foo post handler']
+  should.exists(fooPostHandleable)
+
+  var urlBuilder = fooPostHandleable.urlBuilder
+  should.exists(urlBuilder)
+
+  var res = urlBuilder({})
+  should.equal(res.value, 'http://example.com/foo')
+  
   if(config.testUrlBuilder) {
     var urlBuilder = config.urlBuilder
 
