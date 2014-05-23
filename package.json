@@ -6,13 +6,14 @@
   },
   "name": "quiver-router",
   "desription": "Router stream handler that dispatch requests to different handlers based on supplied path",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/quiverjs/router",
   "repository": {
     "url": "git@github.com:quiverjs/router.git"
   },
   "dependencies": {
     "async": "~0.9.0",
+    "quiver-http": "~0.0.1",
     "quiver-copy": "~0.1.6",
     "quiver-merge": "~0.0.1",
     "quiver-error": "~0.1.0",
